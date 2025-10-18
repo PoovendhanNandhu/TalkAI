@@ -16,9 +16,14 @@ from pydub import AudioSegment
 import regex as re
 
 # Configure ffmpeg path for pydub
-AudioSegment.converter = "/opt/homebrew/bin/ffmpeg"
-AudioSegment.ffmpeg = "/opt/homebrew/bin/ffmpeg"
-AudioSegment.ffprobe = "/opt/homebrew/bin/ffprobe"
+# On macOS (Homebrew), use /opt/homebrew/bin/ffmpeg
+# On Linux (Docker), ffmpeg is in PATH
+import shutil
+ffmpeg_path = shutil.which("ffmpeg") or "/opt/homebrew/bin/ffmpeg"
+ffprobe_path = shutil.which("ffprobe") or "/opt/homebrew/bin/ffprobe"
+AudioSegment.converter = ffmpeg_path
+AudioSegment.ffmpeg = ffmpeg_path
+AudioSegment.ffprobe = ffprobe_path
 
 # Load Coqui XTTS v2 (open-source, multilingual) once at startup
 from TTS.api import TTS
